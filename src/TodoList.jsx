@@ -7,6 +7,7 @@ export default function TodoList() {
   const [task, setTask] = useState("");
   const [agenda, setAgenda] = useState("");
   const [goal, setGoal] = useState("");
+  const [date, setDate] = useState("");
   const [taskHistory, setTaskHistory] = useState(() => JSON.parse(localStorage.getItem("taskHistory")) || []);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [darkMode, setDarkMode] = useState(() => JSON.parse(localStorage.getItem("darkMode")) || false);
@@ -29,13 +30,14 @@ export default function TodoList() {
   };
 
   const addTask = () => {
-    if (!task) return;
-    const newTask = { text: task, agenda, goal, time: new Date().toLocaleString() };
+    if (!task || !date) return;
+    const newTask = { text: task, agenda, goal, date, time: new Date().toLocaleString() };
     setTasks([...tasks, newTask]);
     setTaskHistory([...taskHistory, newTask]);
     setTask("");
     setAgenda("");
     setGoal("");
+    setDate("");
   };
 
   return (
@@ -49,6 +51,7 @@ export default function TodoList() {
         <input type="text" className="form-control" placeholder="Task" value={task} onChange={(e) => setTask(e.target.value)} />
         <input type="text" className="form-control" placeholder="Agenda" value={agenda} onChange={(e) => setAgenda(e.target.value)} />
         <input type="text" className="form-control" placeholder="Goal" value={goal} onChange={(e) => setGoal(e.target.value)} />
+        <input type="date" className="form-control" value={date} onChange={(e) => setDate(e.target.value)} />
         <button className="btn btn-primary" onClick={addTask}><FaPlus /></button>
       </div>
       <div className="w-50">
@@ -56,7 +59,7 @@ export default function TodoList() {
           <div key={index} className="task-box">
             <div>
               <strong>{t.text}</strong>
-              <div className="task-details">Agenda: {t.agenda} | Goal: {t.goal} | Time: {t.time}</div>
+              <div className="task-details">Agenda: {t.agenda} | Goal: {t.goal} | Date: {t.date} | Time: {t.time}</div>
             </div>
             <button className="btn btn-danger" onClick={() => setTasks(tasks.filter((_, i) => i !== index))}><FaTrash /></button>
           </div>
@@ -67,7 +70,7 @@ export default function TodoList() {
         <ul className="list-group">
           {taskHistory.map((entry, index) => (
             <li key={index} className="list-group-item bg-transparent border-0 text-white">
-              {entry.text} - {entry.agenda} - {entry.goal} - {entry.time}
+              {entry.text} - {entry.agenda} - {entry.goal} - {entry.date} - {entry.time}
             </li>
           ))}
         </ul>
